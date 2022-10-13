@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "generateBeta": "deno run -A beta.ts",
-    "generateRelease": "deno run -A release.ts",
-    "generateAll": "deno run -A all.ts"
+    "generateBeta": "deno run -A main.ts --betas",
+    "generateRelease": "deno run -A main.ts --releases",
+    "generateAll": "deno run -A main.ts --releases --betas"
   }
 }
