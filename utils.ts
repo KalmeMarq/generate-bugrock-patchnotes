@@ -377,19 +377,21 @@ async function fetchReleasePageForList(page: number): Promise<IPatchInfo[]> {
   return list;
 }
 
-async function generateReleasePatchNote(info: IPatchInfo): Promise<IPatchNote | null> {
+async function generateReleasePatchNote(info: IPatchInfo, tryHeaderImage: boolean, tryHeaderImageBase64: boolean, tryHeaderImageGen: boolean): Promise<IPatchNote | null> {
   const bodyRegex = /(?<=(<div\s*class="article-body">))(.|\n)+(?=(<\/div>[ \n]*<div\s*class="article-attachments">))/g;
   const alinkRegex = /<a\s*href=".+">.+<\/a>/g;
   const dateRegex = /(?<=(<p>.+<\/strong>)).+(?=<\/p>)/g;
   const dateHtmlRegex = /<p><strong>Posted:\s*<\/strong>.+<\/p>/g;
   const dateSupHtmlRegex = /<sup>.+<\/sup>\s*&nbsp;/g;
   const imgSrc = /(?!(<img src="))\/hc\/.+\.png(?=("\s*(alt=".+")?>))/g;
+  const headerImgSrc = /(?!(<p class="wysiwyg-text-align-center"><img\s*src="))\/hc\/.+(?=("\s*alt=".+"><\/p>))/g;
 
   const html = await (await fetch(info.link)).text();
   const bodyMatch = html.match(bodyRegex);
 
   if (bodyMatch) {
     let body = bodyMatch[0];
+    const name = 'Minecraft: Bedrock Edition ' + info.version;
 
     let date = '';
 
@@ -424,11 +426,37 @@ async function generateReleasePatchNote(info: IPatchInfo): Promise<IPatchNote | 
       date = await tryGetDateFromMCWiki(info.version, false);
     }
 
+    let image: undefined | { url: string; title: string };
+
+    const headerImg = body.match(headerImgSrc);
+
+    if (headerImg && tryHeaderImage) {
+      image = {
+        url: baseFeedbackUrl + headerImg[0],
+        title: name
+      };
+    } else if (headerImg && tryHeaderImageBase64) {
+      image = {
+        url: await fetchImageToBase64SquaredImage(baseFeedbackUrl + headerImg[0]),
+        title: name
+      };
+    } else if (headerImg && tryHeaderImageGen) {
+      Deno.mkdirSync('out/images', { recursive: true });
+
+      await fetchImageDownloadToSquaredImage(baseFeedbackUrl + headerImg[0], info.version);
+
+      image = {
+        url: '%PATCH_NOTES_IMAGES%/images/mcbugrock_' + info.version + '.png',
+        title: name
+      };
+    }
+
     return {
-      title: 'Minecraft: Bedrock Edition ' + info.version,
+      title: name,
       type: 'release',
       version: info.version,
       date: date,
+      image,
       body: body.trim().replace(/\n/g, ''),
       platforms: getPlatforms(info)
     };
@@ -447,7 +475,7 @@ export async function generateReleasePatchNotes(pages: number = 1, tryHeaderImag
   }
 
   for (const item of list) {
-    const patch = await generateReleasePatchNote(item);
+    const patch = await generateReleasePatchNote(item, tryHeaderImage, tryHeaderImageBase64, tryHeaderImageGen);
     if (patch !== null) {
       entries.push(patch);
     }
@@ -462,14 +490,11 @@ export async function generateReleasePatchNotes(pages: number = 1, tryHeaderImag
 
       const off = officialBugrockPatchNotes.find((p) => p.version === entries[i].version);
 
-      if (off && entries[i].image === undefined) {
+      if (off) {
         entries[i].image = {
           url: 'https://launchercontent.mojang.com' + off.image.url,
           title: entries[i].title
         };
-      } else if (tryHeaderImage) {
-      } else if (tryHeaderImageBase64) {
-      } else if (tryHeaderImageGen) {
       }
     }
   }
