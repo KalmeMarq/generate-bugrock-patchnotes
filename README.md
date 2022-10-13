@@ -41,7 +41,7 @@ deno task generateBeta --pages 3
 
 ```--tryHeaderImageBase64``` is an optional arg. Unlike ```--tryHeaderImage```, this will try to crop the header image, if present, into a square and then encode the image to base64. It can create some very long base64 so be careful.
 
-```--tryHeaderImageGen``` is an optional arg. Unlike ```--tryHeaderImage``` and ```--tryHeaderImageBase64```, this will try to generate images from the header image, if present, to a folder and add an placeholder image url to the patch note. You can, for example, put that images folder into a github repo and replace the placecholder text with the repo url.
+```--tryHeaderImageGen``` is an optional arg. Unlike ```--tryHeaderImage``` and ```--tryHeaderImageBase64```, this will try to generate images from the header image, if present, to a folder and add an placeholder image url (e.g "%PATCH_NOTES_IMAGES%/images/mcbugrock_1.69.42") to the patch note. You can, for example, put that images folder into a github repo and replace the placecholder text with the repo url.
 
 ### Output patch note file
 
