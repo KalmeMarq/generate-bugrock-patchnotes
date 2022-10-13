@@ -71,6 +71,7 @@ async function generateBetaPreviewPatchNote(info: IPatchInfo): Promise<IPatchNot
   const dateHtmlRegex = /<p><strong>Posted:\s*<\/strong>.+<\/p>/g;
   const dateSupHtmlRegex = /<sup>.+<\/sup>\s*&nbsp;/g;
   const alinkRegex = /<a\s*href=".+">.+<\/a>/g;
+  const imgSrc = /(?!(<img src="))\/hc\/.+\.png(?=("\s*(alt=".+")?>))/g;
 
   const html = await (await fetch(info.link)).text();
   const bodyMatch = html.match(bodyRegex);
@@ -94,7 +95,14 @@ async function generateBetaPreviewPatchNote(info: IPatchInfo): Promise<IPatchNot
       return newL.replace(/ {2,}/g, ' ');
     });
 
+    body = body.replace(imgSrc, (src) => {
+      return baseFeedbackUrl + src;
+    });
+
     body = body.replaceAll('\u2019', "'");
+    body = body.replaceAll('\u2018', "'");
+    body = body.replaceAll('\u2013', '-');
+    body = body.replaceAll('\u202f', '');
     date = date.trim();
 
     if (date === '') {

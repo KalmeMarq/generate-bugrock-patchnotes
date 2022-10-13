@@ -17,7 +17,7 @@ export interface IPatchInfo {
   link: string;
 }
 
-type Platforms = 'Windows' | 'All' | 'iOS' | 'Android' | 'Xbox' | 'Amazon' | 'Switch' | 'PS4';
+type Platforms = 'All' | 'Windows' | 'iOS' | 'Android' | 'Xbox' | 'Amazon' | 'Switch' | 'PS4';
 
 export interface IPatchNote {
   title: string;

@@ -81,6 +81,7 @@ async function generateReleasePatchNote(info: IPatchInfo): Promise<IPatchNote | 
   const dateRegex = /(?<=(<p>.+<\/strong>)).+(?=<\/p>)/g;
   const dateHtmlRegex = /<p><strong>Posted:\s*<\/strong>.+<\/p>/g;
   const dateSupHtmlRegex = /<sup>.+<\/sup>\s*&nbsp;/g;
+  const imgSrc = /(?!(<img src="))\/hc\/.+\.png(?=("\s*(alt=".+")?>))/g;
 
   const html = await (await fetch(info.link)).text();
   const bodyMatch = html.match(bodyRegex);
@@ -103,6 +104,12 @@ async function generateReleasePatchNote(info: IPatchInfo): Promise<IPatchNote | 
       const newL = l.substring(0, l.indexOf('href')) + ' target="_blank" rel="noopener noreferrer" ' + l.substring(l.indexOf('href'));
       return newL.replace(/ {2,}/g, ' ');
     });
+
+    body = body.replace(imgSrc, (src) => {
+      return baseFeedbackUrl + src;
+    });
+
+    body;
 
     body = body.replaceAll('\u2019', "'");
     body = body.replaceAll('\u2018', "'");

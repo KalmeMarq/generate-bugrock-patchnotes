@@ -26,10 +26,10 @@ deno task generateBetas --pages 3
   entries: {
     id: string;
     title: string;
-    versions: string;
+    version: string;
     date: string;
     body: string;
-    platforms: ('All' | 'Windows' | 'iOS' | 'Android' | 'Xbox')[];
+    platforms: ('All' | 'Windows' | 'iOS' | 'Android' | 'Xbox' | 'Amazon' | 'Switch' | 'PS4')[];
   }[]
 }
 ```
