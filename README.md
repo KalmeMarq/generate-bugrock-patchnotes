@@ -11,6 +11,24 @@ deno task generateBeta
 deno task generateRelease
 ```
 
+### Generate Both Release and Preview/Beta versions
+```
+deno task generateAll
+```
+
+### Extra
+Since Deno allows to run files from urls, you don't need to download the repository to your machine. Of couse, you still need deno installed. You can just go to a directory on your pc and run:
+
+```
+deno run -A https://github.com/KalmeMarq/generate-bugrock-patchnotes/raw/master/main.ts --betas // generateBeta
+```
+```
+deno run -A https://github.com/KalmeMarq/generate-bugrock-patchnotes/raw/master/main.ts --releases // generateRelease
+```
+```
+deno run -A https://github.com/KalmeMarq/generate-bugrock-patchnotes/raw/master/main.ts --betas --releases // generateAll
+```
+
 ### Args
 ```--pages``` is an optional arg that can be used to specify how many pages from each version type (Beta/Preview or Official).
 
