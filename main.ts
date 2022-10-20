@@ -9,7 +9,7 @@ if (args.releases && args.betas) {
   patchNotes.push(...(await generateReleasePatchNotes(args.numPages, args.tryHeaderImage, args.tryHeaderImageBase64, args.tryHeaderImageGen)));
   patchNotes.push(...(await generateBetaPreviewPatchNotes(args.numPages, args.tryHeaderImage, args.tryHeaderImageBase64, args.tryHeaderImageGen)));
   patchNotes = patchNotes.sort((a, b) => {
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
   Deno.writeTextFileSync('out/bugrockPatchNotes.json', JSON.stringify({ entries: patchNotes }, null, 2));

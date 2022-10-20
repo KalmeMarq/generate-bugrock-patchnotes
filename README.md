@@ -50,7 +50,7 @@ deno task generateBeta --pages 3
   entries: {
     id: string;
     title: string;
-    type: 'release' | 'beta';
+    type: 'release' | 'beta' | 'release;
     image?: {
       url: string;
       title: string;

@@ -28,7 +28,7 @@ type Platforms = 'All' | 'Windows' | 'iOS' | 'Android' | 'Xbox' | 'Amazon' | 'Sw
 export interface IPatchNote {
   title: string;
   version: string;
-  type: 'beta' | 'release';
+  type: 'beta' | 'release' | 'preview';
   date: string;
   body: string;
   id?: string;
@@ -308,7 +308,7 @@ async function generateBetaPreviewPatchNote(info: IPatchInfo, tryHeaderImage: bo
 
     return {
       title: name,
-      type: 'beta',
+      type: info.type === 'Beta' ? 'beta' : 'preview',
       version: info.version,
       date: date,
       image,
